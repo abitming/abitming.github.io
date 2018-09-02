@@ -1,0 +1,21 @@
+<table class="ui teal table aside-links">
+    <thead>
+    <tr class="">
+        <th> <i class="cocktail icon"></i>
+            <span>Popular Repositories</span>
+        </th>
+    </tr>
+    </thead>
+    <tbody class="aside-list">
+    {% for repository in site.data.repositories %}
+    <tr class="item">
+        <td>
+            <div class="td-icon">
+                <i class="icon cloud"></i>
+            </div>
+                <a href="{{ repository.link }}" target="_blank" class="title">{{ repository.title }}</a>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

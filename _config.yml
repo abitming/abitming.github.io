@@ -1,0 +1,77 @@
+title: SmallMing | 小明的博客
+name: Eden Chen
+email: edensmallming@gmail.com
+description: gitHub:https://github.com/abitming
+
+skill_keywords: [运维：Linux,Docker,Golang,Python,Kubernetes]
+hobby: [羽毛球，游泳]
+
+timezone:    PRC
+encoding: "utf-8"
+
+url: http://abitming.github.io
+baseurl:  "/"
+domain:    http://abitming.github.io
+permalink:    /articles/:year/:month/:title
+paginate_path: 'blog/page:num'
+paginate:   5
+
+source_code: https://github.com/abitming/abitming.github.io
+
+# Build settings
+lsi:         false
+excerpt_separator: "\n\n"
+
+source:      .
+destination: ./_site
+
+twitter_username: Eden_Sunshine
+github_username:  Smallming
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+#theme: minima
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  enable_coderay: false
+  line_numbers: true
+
+gems:
+  - jemoji
+  - jekyll-sitemap
+  - jekyll-paginate
+#  - jekyll-feed
+
+exclude:
+#  - Gemfile
+#  - Gemfile.lock
+
+# navigation
+navs:
+  -
+    href: /
+    label: Home
+
+  -
+    href: /blog
+    label: Article
+
+  -
+    href: https://abitming.github.io
+    label: Community
+    target: _blank
+
+  -
+    href: /project
+    label: Project
+
+  -
+    href: /about
+    label: About
