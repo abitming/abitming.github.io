@@ -56,7 +56,7 @@ menu: Project
         var repoList = $(' <div class="ui stackable three column grid" id="repo-template"></div>');
         var repoCount = 0;//项目数量
 
-        $.get("https://api.github.com/users/smallming/repos?type=owner", function (repos) {
+        $.get("https://api.github.com/users/abitming/repos?type=owner", function (repos) {
             if (!repos) {
                 alert("failure");
             }

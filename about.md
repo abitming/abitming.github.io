@@ -7,7 +7,7 @@ menu: About
 ---
 {% assign current_year = site.time | date: '%Y' %}
 
-## SmallMing
+## ABitMing
 
 目前就职于 新浪 ，运维工程师/运维开发工程师。主要研究方向 Docker / Kubernetes 相关
 
@@ -19,7 +19,7 @@ menu: About
 
 - QQ: 1328173503
 - Tel: ******
-- 邮箱：edensmallming@gmail.com
+- 邮箱：edenabitming@gmail.com
 - 微博: 冒了个小小泡
 - 主页：http://abitming.github.io
 
