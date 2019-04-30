@@ -1,4 +1,4 @@
-## [Jekyll](http://jekyllcn.com/) 构建的静态博客
+##  小明的博客
 
 ## HomePage
 

@@ -1,4 +1,4 @@
-title: ABitMing | 小明的博客
+title: 小明的博客
 name: Eden Chen
 email: edensmallming@gmail.com
 description: gitHub:https://github.com/abitming
@@ -57,21 +57,21 @@ exclude:
 navs:
   -
     href: /
-    label: Home
+    label: 主页
 
   -
     href: /blog
-    label: Article
+    label: 博客
 
   -
     href: https://abitming.github.io
-    label: Community
+    label: 交流
     target: _blank
 
   -
     href: /project
-    label: Project
+    label: 项目
 
   -
     href: /about
-    label: About
+    label: 关于
