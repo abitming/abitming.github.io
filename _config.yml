@@ -13,8 +13,8 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://abitming.github.io/blog
-root: /blog
+url: https://abitming.github.io
+root: abitming.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
@@ -78,4 +78,6 @@ theme: maupassant
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: git
+  repo: https://github.com/abitming/abitming.github.io.git
+  branch: master
