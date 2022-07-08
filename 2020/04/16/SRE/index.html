@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="IT技术类博客，主要是运维方向(Docker、DevOPS、Golang等)"><title>SRE 运维解密 | 冒了个小小泡</title><link rel="stylesheet" type="text/css" href="/abitming.github.io/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.0/jquery.min.js"></script><link rel="icon" mask sizes="any" href="/abitming.github.io/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/abitming.github.io/favicon.ico"><link rel="apple-touch-icon" href="/abitming.github.io/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/abitming.github.io/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">SRE 运维解密</h1><a id="logo" href="/abitming.github.io/.">冒了个小小泡</a><p class="description">小明的博客</p></div><div id="nav-menu"><a class="current" href="/abitming.github.io/."><i class="fa fa-home"> 首页</i></a><a href="/abitming.github.io/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/abitming.github.io/about/"><i class="fa fa-user"> 关于</i></a><a href="/abitming.github.io/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">SRE 运维解密</h1><div class="post-meta">Apr 16, 2020</div><div class="post-content"><h1 id="SRE-运维解密"><a href="#SRE-运维解密" class="headerlink" title="SRE : 运维解密"></a>SRE : 运维解密</h1><p>运维和开发的分歧：</p>
+<p>研发部门最关注的是如何能够更快速地构建和发布新功能。</p>
+<p>运维部门更关注的是如何能在他们值班期间避免发生故障。</p>
+<p>SRE基本信念：用软件工程方法可以解决复杂的运维问题。</p>
+<p>SRE方法论：</p>
+<p>核心职责：可用性改进，延迟优化，性能优化，效率优化，变更管理，监控，紧急事务处理以及容量规划与管理</p>
+<p>故障总结：事故发生、发现、解决的全过程，事故的根本原因，预防或者优化的解决方案。</p>
+<p>错误预算</p>
+<p>监控系统的三类输出：紧急报警、工单、日志</p>
+<p>运维手册</p>
+<p>容量规划的几个步骤：</p>
+<p>1、必须有一个准确的自然增长需求预测模型，需求预测的时间应该超过资源获取的时间。</p>
+<p>2、规划中必须有准确的非自然增长的需求来源的统计。</p>
+<p>3、必须有周期性压力测试，以便准确地将系统原始资源信息与业务容量对应起来。</p>
+<p>服务质量指标（SLI）： 该服务的某项服务质量的一个具体量化指标。如请求延迟、错误率、系统吞吐量等，通常是一段时间内原始数据收集起来计算速率、平均值、百分比等。</p>
+<p><strong>SLI通常分成三类：</strong></p>
+<p><strong>1、用户可见的服务系统：可用性、延迟和吞吐量，即能否正常处理请求、每个请求的耗时、多少请求可以被处理</strong></p>
+<p><strong>2、存储系统：可用性、延迟和数据持久性，即读写数据要多长时间、是否可以随时读取、数据是否一段时间还可以被读取</strong></p>
+<p><strong>3、大数据系统：如流数据系统应该关注吞吐量和延迟。</strong></p>
+<p><strong>所有系统都应该关注：正确性</strong></p>
+<p>百分位的监控指标要优于平均值的监控指标</p>
+<p>服务质量目标（SLO）：服务的某个SLI的目标值，或者目标范围。</p>
+<p>服务质量协议（SLA）： 指服务与用户之间的一个明确的，或者不明确的协议，描述了在达到或者没有达到SLO之后的后果</p>
+<p>六、分布式系统监控</p>
+<p> SRE的一个公开目标是保持每个SRE的工作时间中运维工作（即琐事）的比例低于50%。SRE至少花50%的时间在工程项目上，以减少未来的琐事或增加服务功能。增加服务功能包括提高可靠性、性能，或利用率，同时也会进一步消除琐事。</p>
+<p>白盒监控（white-box monitoring：依靠系统内部暴露的一些性能指标进行监控。包括日志分析、Java虚拟机提供的监控接口，或者一个列出内部统计数据的HTTP接口进行监控。</p>
+<p>黑盒监控（black-box monitoring：通过测试某种外部用户可见的系统行为进行监控。</p>
+<p>监控的4个黄金指标：</p>
+<p>1、延迟</p>
+<p>服务处理某个请求所需要的时间。这里区分成功请求和失败请求很重要。例如，某个由于数据库连接丢失或者其他后端问题造成的HTTP 500错误可能延迟很低。计算总体延迟时，如果将500回复的延迟也计算在内，可能会产生误导性的结果。但是，“慢”错误要比“快”错误更糟！因此，监控错误回复的延迟是很重要的。</p>
+<p>2、流量</p>
+<p>使用系统中的某个高层次的指标针对系统负载需求所进行的度量。对Web服务器来说，该指标通常是每秒HTTP请求数量，同时可能按请求类型分类（静态请求与动态请求）。针对音频流媒体系统来说，这个指标可能是网络I/O速率，或者并发会话数量。针对键值对存储系统来说，指标可能是每秒交易数量，或每秒的读取操作数量。</p>
+<p>3、错误</p>
+<p>请求失败的速率，要么是显式失败（例如HTTP 500），要么是隐式失败（例如HTTP 200 回复中包含了错误内容），或者是策略原因导致的失败（例如，如果要求回复在1s内发出，任何超过1s的请求就都是失败请求）。当协议内部的错误代码无法表达全部的失败情况时，可以利用其他信息，如内部协议，来跟踪一部分特定故障情况。监控方式也非常不一样：在负载均衡器上检测HTTP 500请求可能足够抓住所有的完全失败的请求，但是只有端到端的系统才能检测到返回错误内容这种故障类型。</p>
+<p>4、饱和度</p>
+<p>服务容量有多“满”。通常是系统中目前最为受限的某种资源的某个具体指标的度量。（在内存受限的系统中，即为内存；在I/O受限的系统中，即为I/O）。这里要注意，很多系统在达到100%利用率之前性能会严重下降，增加一个利用率目标也是很重要的。</p>
+<p>长尾问题：区分平均值的“慢”和长尾值的“慢”的一个最简单办法是将请求按延迟分组计数（可以用来制作直方图）：延迟为0～10ms之间的请求数量有多少，30～100ms之间，100～300ms之间等。将直方图的边界定义为指数型增长（这个例子中倍数约为3）是直观展现请求分布的最好方式。</p>
+<p>当为监控系统和警报系统增加新规则时，回答下列问题可以帮助减少误报：</p>
+<p>1、 该规则是否能够检测到一个目前检测不到的、紧急的、有操作性的，并且即将发生或者已经发生的用户可见故障？</p>
+<p>2、 是否可以忽略这条警报？什么情况可能会导致用户忽略这条警报，如何避免？</p>
+<p>3、这条警报是否确实显示了用户正在受到影响？是否存在用户没有受到影响也可以触发这条规则的情况？例如测试环境和系统维护状态下发出的警报是否应该被过滤掉。</p>
+<p>4、 收到警报后，是否要进行某个操作？是否需要立即执行该操作，还是可以等到第二天早上再进行？该操作是否可以被安全地自动化？该操作的效果是长期的，还是短期的？</p>
+<p>5、 是否也会有其他人收到相关的紧急警报，这些紧急警报是否是不必要的？</p>
+<p>以上这些问题其实反映了在应对紧急警报上的一些深层次的理念：</p>
+<p>1、 每当收到紧急警报时，应该立即需要我进行某种操作。每天只能进入紧急状态几次，太多就会导致“狼来了”效应。</p>
+<p>2、 每个紧急警报都应该是可以具体操作的。</p>
+<p>3、每个紧急警报的回复都应该需要某种智力分析过程。如果某个紧急警报只是需要一个固定的机械动作，那么它就不应该成为紧急警报。</p>
+<p>4、 每个紧急警报都应该是关于某个新问题的，不应该彼此重叠。</p>
+<p>七、 Google 的自动化系统的演进</p>
+<p>八、发布工程</p>
+<p>四个核心和工程和服务哲学：</p>
+<p>1、自服务模型：发布工程师开发工具，制定最佳实践，以便让产品研发团队可以自己掌控和执行自己的发布流程。</p>
+<p>2、追求速度：目标是让用户可见的功能越快上线越好。</p>
+<p>3、密闭性：构建工具必须确保一致性和可重复性。</p>
+<p>4、强调策略和流程：多层安全和访问控制机制可以确保在发布过程中只有指定的人才能执行指定的操作。</p>
+<p>九、简单化</p>
+<p>可靠性只有靠对最大程度的简化不断追求而得到。</p>
+<p>必要复杂度是一个给定的情况所固有的复杂度，不能从该问题的定义中移除，而意外复杂度则是不固定的，可以通过工程上的努力来解决。例如，编写一个Web服务器需要处理快速提供Web页面的必要复杂度。但是，如果我们用Java编写该服务器，试图减少GC的影响就可能会引入意外复杂度。</p>
+<p>最小化意外复杂度：</p>
+<p>1、在他们所负责的系统中引入意外复杂度时，及时提出抗议。</p>
+<p>2、不断地努力消除正在接手的和已经负责运维的系统的复杂度。</p>
+<p>服务可靠度指标的需求模型：</p>
+<p><img src="/abitming.github.io/2020/04/16/SRE/服务可靠性需求模型.png" alt="服务可靠性需求模型"></p>
+<p>十、基于时间序列数据进行有效报警</p>
+<p>time-series的监控和报警的理念，Prometheus是典型的代表。</p>
+<p>十一、on-call轮值</p>
+<p>1、清晰的问题升级路线。</p>
+<p>2、清晰定义的应急事件处理步骤。</p>
+<p>3、无指责，对事不对人的文化氛围</p>
+<p>SRE团队运维压力不够也是一个不良现象。长时间不操作生产环境会导致自信心问题，包括自信心太强以及自信心不够。这些现象只有在下一次发生问题时，才会显现出来。为了避免这种问题，应该控制SRE团队的大小，保证每个工程师每个季度至少参与oncall一次，最好两次。</p>
+<p>十二、 有效的故障排查手段</p>
+<p>理解一个系统应该如何工作并不能使人成为专家。只能靠调查系统为何不能正常工作才行。</p>
+<p><img src="/abitming.github.io/2020/04/16/SRE/故障处理流程.png" alt="故障处理流程"></p>
+<p>故障定位常见陷阱：</p>
+<p>1、关注了错误的系统现象，或者错误地理解了系统现象的含义。这样会在错误的方向上浪费时间。</p>
+<p>2、不能正确修改系统的配置信息、输入信息或者系统运行环境，造成不能安全和有效地测试假设。</p>
+<p>3、将问题过早地归结为极为不可能的因素（例如认为是宇宙射线造成数据变化，虽然有可能发生，但是并不应该在解决问题初期做这个假设），或者念念不忘之前曾经发生过的系统问题，认为一旦发生过一次，就有可能再次发生。</p>
+<p>4、试图解决与当前系统问题相关的一些问题，却没有认识到这些其实只是巧合，或者这些问题其实是由于当前系统的问题造成的。（比如发现数据库压力大的情况下，环境温度也有所上升，于是试图解决环境温度问题。）</p>
+<p>在大型问题中，你的第一反应可能是立即开始故障排查过程，试图尽快找到问题根源。这是错误的！不要这样做。正确的做法应该是：<strong>尽最大可能让系统恢复服务。这可能需要一些应急措施</strong>，比如，将用户流量从问题集群导向其他还在正常工作的集群，或者将流量彻底抛弃以避免连锁过载问题，或者关闭系统的某些功能以降低负载。缓解系统问题应该是你的第一要务。当然，<strong>快速定位问题时仍应该及时保存问题现场</strong>，比如服务日志等，以便后续进行问题根源分析时使用。</p>
+<p>十三、 紧急事件响应</p>
+<p>十四、 紧急事故管理</p>
+<p>紧急故障处理的角色</p>
+<p>事故总控（incident command）</p>
+<p>事故总控负责人掌握这次事故的概要信息。他们负责组建事故处理团队，按需求和优先级将一些任务分配给团队成员。未分配的职责仍由事故总控人负责。如果有必要的话，他们要负责协调工作，让事务处理团队可以更有效地解决问题，比如代申请访问权限、收集联系信息等。</p>
+<p>事务处理团队（operational work）</p>
+<p>事务处理团队负责人在与事故总控负责人充分沟通的情况下，负责指挥团队具体执行合适的事务来解决问题。事务处理团队是在一次事故中唯一能够对系统做修改的团队。</p>
+<p>发言人（communication）</p>
+<p>该人是本次事故处理团队的公众发言人。他的职责包括向事故处理团队和所有关心的人发送周期性通知（通常以电子邮件形式），同时可能要负责维护目前的事故文档，保证其正确性和信息的及时性。</p>
+<p>十五、事后总结：从失败中学习</p>
+<p>基本的事后总结条件为：</p>
+<p>1、 用户可见的宕机时间或者服务质量降级程度达到一定标准。</p>
+<p>2、任何类型的数据丢失。</p>
+<p>3、 on-call 工程师需要人工介入的事故（包括回滚、切换用户流量等）。</p>
+<p>4、问题解决耗时超过一定限制。</p>
+<p>5、监控问题（预示着问题是由人工发现的，而非报警系统）。</p>
+</div><div class="tags"><a href="/abitming.github.io/tags/SRE、运维/">SRE、运维</a></div><div class="post-nav"><a class="pre" href="/abitming.github.io/2020/04/23/Sina/">Sina，江湖再见</a><a class="next" href="/abitming.github.io/2020/04/16/Prometheus/">基于Prometheus的监控平台</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/abitming.github.io/tags/Linux，Docker/" style="font-size: 15px;">Linux，Docker</a> <a href="/abitming.github.io/tags/Ceph，存储/" style="font-size: 15px;">Ceph，存储</a> <a href="/abitming.github.io/tags/SRE、运维/" style="font-size: 15px;">SRE、运维</a> <a href="/abitming.github.io/tags/感想/" style="font-size: 15px;">感想</a> <a href="/abitming.github.io/tags/CNCF，Prometheus，Thanos，AlterManager/" style="font-size: 15px;">CNCF，Prometheus，Thanos，AlterManager</a> <a href="/abitming.github.io/tags/Varnish，Cache/" style="font-size: 15px;">Varnish，Cache</a> <a href="/abitming.github.io/tags/自述/" style="font-size: 15px;">自述</a> <a href="/abitming.github.io/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/abitming.github.io/tags/Golang/" style="font-size: 15px;">Golang</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/23/Sina/">Sina，江湖再见</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/16/SRE/">SRE 运维解密</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/16/Prometheus/">基于Prometheus的监控平台</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/09/Ceph那些事/">Ceph初探</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/09/varnish那些事/">Varnish缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2019/12/31/容器技术 - Docker网络/">容器技术 - Docker网络</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2019/12/23/容器技术 - Dockerfile/">容器技术 - Dockerfile</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2019/08/16/Linux的limit以及Docker的中的应用/">Linux的limit.conf以及在Docker中的应用</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2019/05/05/白话golang并发/">白话Golang并发</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2019/05/05/博客的开始/">关于我</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://www.docker.com" title="Docker官网" target="_blank">Docker官网</a><ul></ul><a href="https://kubernetes.io" title="Kubernetes官网" target="_blank">Kubernetes官网</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2022 <a href="/abitming.github.io/." rel="nofollow">冒了个小小泡.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Abitming.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"></a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/abitming.github.io/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/abitming.github.io/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/abitming.github.io/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
+if (search_path.length == 0) {
+   search_path = 'search.xml';
+}
+var path = '/abitming.github.io/' + search_path;
+searchFunc(path, 'local-search-input', 'local-search-result');
+</script><script type="text/javascript" src="/abitming.github.io/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/abitming.github.io/js/smartresize.js?v=0.0.0"></script></div></body></html>
