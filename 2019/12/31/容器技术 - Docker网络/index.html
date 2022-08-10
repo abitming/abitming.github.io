@@ -1,4 +1,316 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="IT技术类博客，主要是运维方向(Docker、DevOPS、Golang等)"><title>容器技术 - Docker网络 | 冒了个小小泡</title><link rel="stylesheet" type="text/css" href="/abitming.github.io/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.0/jquery.min.js"></script><link rel="icon" mask sizes="any" href="/abitming.github.io/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/abitming.github.io/favicon.ico"><link rel="apple-touch-icon" href="/abitming.github.io/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/abitming.github.io/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">容器技术 - Docker网络</h1><a id="logo" href="/abitming.github.io/.">冒了个小小泡</a><p class="description">小明的博客</p></div><div id="nav-menu"><a class="current" href="/abitming.github.io/."><i class="fa fa-home"> 首页</i></a><a href="/abitming.github.io/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/abitming.github.io/about/"><i class="fa fa-user"> 关于</i></a><a href="/abitming.github.io/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">容器技术 - Docker网络</h1><div class="post-meta">Dec 31, 2019</div><div class="post-content"><h3 id="容器技术-Docker网络"><a href="#容器技术-Docker网络" class="headerlink" title="容器技术 - Docker网络"></a>容器技术 - Docker网络</h3><p> 　　说到 Docker 的网络，得先说说 Docker 的版本。Docker 因为中途经历了商业化，所以版本变化可以说是有些混乱。我们现在用的 Docker 分成两种 Docker CE 和 Docker EE (分别是社区版和商业版)，Docker 初期是没有商业版的那个时候叫 Docker Engine，为什么叫Engine 呢？因为 Docker 本身是 C-S 结构的服务。在2017年3月2日，Docker 开始了商业化就诞生了Docker CE ( Docker Community Edition ) 和 Docker EE (Docker Enterprise Edition)。Docker CE 的版本号命名的方式就是从这个日子开始的，对应的第一个版本 17.03。而 Docker Engine 的版本就停在了 2017 年 2 月 8 日的 1.13.1。<br>　　版本梳理清楚之后我们来说说网络。Docker 的网络是插件式的，所以通常说的Docker 自带的网络其实指的是 Docker 默认带的几种网络驱动。目前(到最新版本 19.03.5 ) Docker CE 自带了 5 种网络驱动，分别是<code>Host</code> <code>Bridge</code> <code>Overlay</code> <code>Macvlan</code> <code>None</code>。使用 docker network list 可以查看默认自带的网络。</p>
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/abitming.github.io/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/abitming.github.io/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/abitming.github.io/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/abitming.github.io/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/abitming.github.io/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/abitming.github.io/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/abitming.github.io/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Docker,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Docker Network">
+<meta name="keywords" content="Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="容器技术 - Docker网络">
+<meta property="og:url" content="https://abitming.github.io/2019/12/31/容器技术 - Docker网络/index.html">
+<meta property="og:site_name" content="冒了个小小泡">
+<meta property="og:description" content="Docker Network">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://abitming.github.io/abitming.github.io/2019/12/31/容器技术%20-%20Docker网络/1577346560648.png">
+<meta property="og:image" content="https://abitming.github.io/abitming.github.io/2019/12/31/容器技术%20-%20Docker网络/1577778069010.png">
+<meta property="og:image" content="https://abitming.github.io/abitming.github.io/2019/12/31/容器技术%20-%20Docker网络/1577778174425.png">
+<meta property="og:image" content="https://abitming.github.io/abitming.github.io/2019/12/31/容器技术%20-%20Docker网络/1577781073232.png">
+<meta property="og:image" content="https://abitming.github.io/abitming.github.io/2019/12/31/容器技术%20-%20Docker网络/1577781190856.png">
+<meta property="og:updated_time" content="2020-01-02T09:11:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="容器技术 - Docker网络">
+<meta name="twitter:description" content="Docker Network">
+<meta name="twitter:image" content="https://abitming.github.io/abitming.github.io/2019/12/31/容器技术%20-%20Docker网络/1577346560648.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/abitming.github.io/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://abitming.github.io/2019/12/31/容器技术 - Docker网络/">
+
+
+
+
+
+  <title>容器技术 - Docker网络 | 冒了个小小泡</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/abitming.github.io/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">冒了个小小泡</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">小明的博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/abitming.github.io/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/abitming.github.io/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://abitming.github.io/abitming.github.io/2019/12/31/容器技术 - Docker网络/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小明">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/abitming.github.io/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="冒了个小小泡">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">容器技术 - Docker网络</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-31T16:40:01+08:00">
+                2019-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  Docker Network
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="容器技术-Docker网络"><a href="#容器技术-Docker网络" class="headerlink" title="容器技术 - Docker网络"></a>容器技术 - Docker网络</h3><p> 　　说到 Docker 的网络，得先说说 Docker 的版本。Docker 因为中途经历了商业化，所以版本变化可以说是有些混乱。我们现在用的 Docker 分成两种 Docker CE 和 Docker EE (分别是社区版和商业版)，Docker 初期是没有商业版的那个时候叫 Docker Engine，为什么叫Engine 呢？因为 Docker 本身是 C-S 结构的服务。在2017年3月2日，Docker 开始了商业化就诞生了Docker CE ( Docker Community Edition ) 和 Docker EE (Docker Enterprise Edition)。Docker CE 的版本号命名的方式就是从这个日子开始的，对应的第一个版本 17.03。而 Docker Engine 的版本就停在了 2017 年 2 月 8 日的 1.13.1。<br>　　版本梳理清楚之后我们来说说网络。Docker 的网络是插件式的，所以通常说的Docker 自带的网络其实指的是 Docker 默认带的几种网络驱动。目前(到最新版本 19.03.5 ) Docker CE 自带了 5 种网络驱动，分别是<code>Host</code> <code>Bridge</code> <code>Overlay</code> <code>Macvlan</code> <code>None</code>。使用 docker network list 可以查看默认自带的网络。</p>
 <h2 id><a href="#" class="headerlink" title="　　  "></a>　　  </h2><h4 id="Bridge模式"><a href="#Bridge模式" class="headerlink" title=" Bridge模式 "></a><font color="red"> Bridge模式 </font></h4><p>　　这也是目前 Docker 启动时不在任何网络参数时默认的网络模式。<br>　　当 Docker Server启动时，会在主机上创建一个名为 docker0 的虚拟网桥，此主机上启动的 Docker 容器会连接到这个虚拟网桥上。虚拟网桥的工作方式和物理交换机类似，这样主机上的所有容器就通过交换机连在了一个二层网络中。接下来就要为容器分配 IP 了， Docker 会从 RFC1918 所定义的私有IP网段中，选择一个和宿主机不同的 IP 地址和子网分配给 docker0，连接到 docker0 的容器就从这个子网中选择一个未占用的IP使用。如一般 Docker会使用 172.17.0.0/16 这个网段，并将 172.17.0.1/16 分配给 docker0 网桥（在主机上使用 ifconfig 命令是可以看到 docker0 的，可以认为它是网桥的管理接口，在宿主机上作为一块虚拟网卡使用）。单机环境下的网络拓扑如下，主机地址为 10.10.0.186/24。</p>
 <p><img src="/abitming.github.io/2019/12/31/容器技术 - Docker网络/1577346560648.png" alt="Bridge模式"></p>
 <p> <strong>通信方式</strong> ：<br> <font color="blue"><strong>1、docker1 —&gt; docker2 (同一个网桥)</strong></font><br>　　两个容器的通信是直接通过 docker0 进行的，此时 docker0 相当于一个二层设备提供数据转换功能。当然可以通过参数控制两个容器之间的通信。<br>  <font color="blue"><strong>2、docker1 –&gt; host(宿主机)</strong></font><br>  <font color="blue"><strong>3、docker1 –&gt; 其他物理机host1</strong></font><br>　　IP包首先从容器发往自己的默认网关 docker0，包到达 docker0 后，也就到达了主机上。然后会查询主机的路由表，发现包应该从主机的 eth0 发往主机的网关10.10.105.254/24。接着包会转发给 eth0，并从 eth0 发出去（主机的 ip_forward 转发应该已经打开）。这时候，上面的 Iptable 规则就会起作用，对包做 SNAT 转换，将源地址换为 eth0 的地址。这样，在外界看来，这个包就是从 10.10.101.105 上发出来的，Docker 容器对外是不可见的。<br>  <font color="blue"><strong>4、其他物理机host1 –&gt; docker1</strong></font><br>　　IP 包到达 docker1 所在的宿主机 host 的指定端口( docker1 映射出来的端口)，宿主机的 eth0 收到的目的端口为 80 的 tcp 流量进行 DNAT 转换，将流量发往 172.17.0.2:80。但是host1全程是感知不到 docker1 的存在的。</p>
@@ -20,10 +332,375 @@
 <hr>
 <h4 id="其他模式-–-Calico模式"><a href="#其他模式-–-Calico模式" class="headerlink" title=" 其他模式 – Calico模式 "></a><font color="red"> 其他模式 – Calico模式 </font></h4><p>　　Calico 是一个纯三层的网络，它没有创建任何的网桥，它之所以能完成跨主机的通信，是因为它借助 Etcd 将网络中各网段的路由信息写进了主机中，然后创建的一对的 veth pair，一块留在容器的 Network Namespace 中，一块成了主机中的虚拟网卡，加入到主机路由表中，从而打通不同主机中的容器通信。<br><img src="/abitming.github.io/2019/12/31/容器技术 - Docker网络/1577781190856.png" alt="Calico模式"><br>　　Calico 相较其他几个网络方案最大优点是它提供 Policy 机制，用户可以根据自己的需求自定义 Policy，一个 Policy 可能对应一条 ACL，用于控制进出容器的数据包，比如我们建立了多个 Calico 网络，想控制其中几个网络可以互通，其余不能互通，就可以修改 Policy 的配置文件来满足要求，这种方式大大增加了网络连通和隔离的灵活性。但是生产环境使用 Policy 会让管理成本直线上升，如果想做单个容器的流量控制(比如限流/熔断等)酌情选择。</p>
 <p><strong>关于 Fannel 和 Calico 两种网络模式，后面考虑重点写两篇网络架构的文章，深入的聊一聊</strong><br><a href="https://docs.docker.com/network/" target="_blank" rel="noopener">Docker 官网 – Network </a></p>
-</div><div class="tags"><a href="/abitming.github.io/tags/Docker/">Docker</a></div><div class="post-nav"><a class="pre" href="/abitming.github.io/2020/04/09/varnish那些事/">Varnish缓存</a><a class="next" href="/abitming.github.io/2019/12/23/容器技术 - Dockerfile/">容器技术 - Dockerfile</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="search-form"><input id="local-search-input" placeholder="Search" type="text" name="q" results="0"><div id="local-search-result"></div></div></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/abitming.github.io/tags/Ceph，存储/" style="font-size: 15px;">Ceph，存储</a> <a href="/abitming.github.io/tags/SRE、运维/" style="font-size: 15px;">SRE、运维</a> <a href="/abitming.github.io/tags/感想/" style="font-size: 15px;">感想</a> <a href="/abitming.github.io/tags/全链路，Pinpoint，监控/" style="font-size: 15px;">全链路，Pinpoint，监控</a> <a href="/abitming.github.io/tags/Varnish，Cache/" style="font-size: 15px;">Varnish，Cache</a> <a href="/abitming.github.io/tags/Linux，Docker/" style="font-size: 15px;">Linux，Docker</a> <a href="/abitming.github.io/tags/自述/" style="font-size: 15px;">自述</a> <a href="/abitming.github.io/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/abitming.github.io/tags/Golang/" style="font-size: 15px;">Golang</a> <a href="/abitming.github.io/tags/CNCF，Prometheus，Thanos，AlterManager/" style="font-size: 15px;">CNCF，Prometheus，Thanos，AlterManager</a> <a href="/abitming.github.io/tags/CDCF、Kubernetes、Docker/" style="font-size: 15px;">CDCF、Kubernetes、Docker</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2022/08/01/K8S零碎知识点/">Kubernetes知识点汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2022/07/11/Pinpoint指南/">Pinpoint指南</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/23/Sina/">Sina，江湖再见</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/16/SRE/">SRE 运维解密</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/16/Prometheus/">基于Prometheus的监控平台</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/09/Ceph那些事/">Ceph初探</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2020/04/09/varnish那些事/">Varnish缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2019/12/31/容器技术 - Docker网络/">容器技术 - Docker网络</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2019/12/23/容器技术 - Dockerfile/">容器技术 - Dockerfile</a></li><li class="post-list-item"><a class="post-list-link" href="/abitming.github.io/2019/08/16/Linux的limit以及Docker的中的应用/">Linux的limit.conf以及在Docker中的应用</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="https://www.docker.com" title="Docker官网" target="_blank">Docker官网</a><ul></ul><a href="https://kubernetes.io" title="Kubernetes官网" target="_blank">Kubernetes官网</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2022 <a href="/abitming.github.io/." rel="nofollow">冒了个小小泡.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Abitming.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"></a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/abitming.github.io/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/abitming.github.io/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" src="/abitming.github.io/js/search.js?v=0.0.0"></script><script>var search_path = 'search.xml';
-if (search_path.length == 0) {
-   search_path = 'search.xml';
-}
-var path = '/abitming.github.io/' + search_path;
-searchFunc(path, 'local-search-input', 'local-search-result');
-</script><script type="text/javascript" src="/abitming.github.io/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/abitming.github.io/js/smartresize.js?v=0.0.0"></script></div></body></html>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/abitming.github.io/tags/Docker/" rel="tag"># Docker</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/abitming.github.io/2019/12/23/容器技术 - Dockerfile/" rel="next" title="容器技术 - Dockerfile">
+                <i class="fa fa-chevron-left"></i> 容器技术 - Dockerfile
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/abitming.github.io/2020/04/09/varnish那些事/" rel="prev" title="Varnish缓存">
+                Varnish缓存 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">小明</p>
+              <p class="site-description motion-element" itemprop="description">IT技术类博客，主要是运维方向(Docker、DevOPS、Golang等)</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/abitming.github.io/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#容器技术-Docker网络"><span class="nav-number">1.</span> <span class="nav-text">容器技术 - Docker网络</span></a></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number"></span> <span class="nav-text">　　  </span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Bridge模式"><span class="nav-number">0.1.</span> <span class="nav-text"> Bridge模式 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Host模式"><span class="nav-number">0.2.</span> <span class="nav-text"> Host模式 </span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#-1"><span class="nav-number"></span> <span class="nav-text">　　</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Overlay模式-俗称隧道网络"><span class="nav-number">0.1.</span> <span class="nav-text"> Overlay模式(俗称隧道网络) </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#None模式"><span class="nav-number">0.2.</span> <span class="nav-text"> None模式 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Macvlan模式"><span class="nav-number">0.3.</span> <span class="nav-text"> Macvlan模式 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他模式-–-Flannel模式"><span class="nav-number">0.4.</span> <span class="nav-text"> 其他模式 – Flannel模式 </span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他模式-–-Calico模式"><span class="nav-number">0.5.</span> <span class="nav-text"> 其他模式 – Calico模式 </span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小明</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/abitming.github.io/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/abitming.github.io/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/abitming.github.io/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/abitming.github.io/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/abitming.github.io/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/abitming.github.io/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/abitming.github.io/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/abitming.github.io/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/abitming.github.io/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/abitming.github.io/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/abitming.github.io/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
